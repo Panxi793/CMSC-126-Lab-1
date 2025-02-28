@@ -123,5 +123,5 @@ if __name__ == "__main__":
 
     print("\n--- Data Received ---\n")
     print("Received message:", received_message)
-    print("OSI Model Simulation Complete! 🚀")
+    print("OSI Model Simulation Complete!")
 
