@@ -1,4 +1,14 @@
 import json
+import socket
+import uuid
+
+# Get local IP and MAC address
+def get_local_ip():
+    return socket.gethostbyname(socket.gethostname())
+
+def get_mac_address():
+    mac = ':'.join(['{:02x}'.format((uuid.getnode() >> elements) & 0xff) for elements in range(0, 2 * 6, 8)][::-1])
+    return mac
 
 # Physical Layer
 class PhysicalLayer:
@@ -15,45 +25,45 @@ class PhysicalLayer:
 # Data Link Layer
 class DataLinkLayer:
     def send(self, bits, mac_address):
-        print("[Data Link Layer] Creating frame with MAC address")
+        print(f"[Data Link Layer] Creating frame with MAC address: {mac_address}")
         frame = {'MAC': mac_address, 'Data': bits}
         return frame
 
     def receive(self, frame):
-        print("[Data Link Layer] Extracting data from frame")
+        print(f"[Data Link Layer] Extracting data from frame with MAC address: {frame['MAC']}")
         return frame['Data']
 
 # Network Layer
 class NetworkLayer:
     def send(self, frame, ip_address):
-        print("[Network Layer] Creating packet with IP address")
+        print(f"[Network Layer] Creating packet with IP address: {ip_address}")
         packet = {'IP': ip_address, 'Frame': frame}
         return packet
 
     def receive(self, packet):
-        print("[Network Layer] Extracting frame from packet")
+        print(f"[Network Layer] Extracting frame from packet with IP address: {packet['IP']}")
         return packet['Frame']
 
 # Transport Layer
 class TransportLayer:
     def send(self, packet, seq_num):
-        print("[Transport Layer] Adding sequence number")
+        print(f"[Transport Layer] Adding sequence number: {seq_num}")
         segment = {'Seq': seq_num, 'Packet': packet}
         return segment
 
     def receive(self, segment):
-        print("[Transport Layer] Extracting packet from segment")
+        print(f"[Transport Layer] Extracting packet from segment with sequence number: {segment['Seq']}")
         return segment['Packet']
 
 # Session Layer
 class SessionLayer:
     def send(self, segment, session_id):
-        print("[Session Layer] Managing session with ID")
+        print(f"[Session Layer] Managing session with ID: {session_id}")
         session = {'SessionID': session_id, 'Segment': segment}
         return session
 
     def receive(self, session):
-        print("[Session Layer] Extracting segment from session")
+        print(f"[Session Layer] Extracting segment from session with ID: {session['SessionID']}")
         return session['Segment']
 
 # Presentation Layer
@@ -82,9 +92,9 @@ class ApplicationLayer:
 # Simulate communication
 if __name__ == "__main__":
     message = "Hello, OSI Model!"
-    mac_address = "00:1B:44:11:3A:B7"
-    ip_address = "192.168.1.1"
-    seq_num = 1
+    mac_address = get_mac_address()
+    ip_address = get_local_ip()
+    seq_num = "1"
     session_id = "12345"
 
     # Instantiate each layer
@@ -96,7 +106,9 @@ if __name__ == "__main__":
     data_link = DataLinkLayer()
     phys = PhysicalLayer()
 
-    print("Starting OSI Model Simulation...")
+    print("\nStarting OSI Model Simulation...\n")
+    print(f"Local IP Address: {ip_address}")
+    print(f"Local MAC Address: {mac_address}\n")
 
     # Sending
     app_data = app.send(message)
@@ -120,8 +132,6 @@ if __name__ == "__main__":
     received_app = pres.receive(received_pres)
     received_message = app.receive(received_app)
 
-
     print("\n--- Data Received ---\n")
     print("Received message:", received_message)
     print("OSI Model Simulation Complete!")
-
