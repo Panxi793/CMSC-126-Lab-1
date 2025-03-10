@@ -7,9 +7,10 @@ def get_local_ip():
     return socket.gethostbyname(socket.gethostname())
 
 def get_mac_address():
-    mac = ':'.join(['{:02x}'.format((uuid.getnode() >> elements) & 0xff) for elements in range(0, 2 * 6, 8)][::-1])
+    mac = ':'.join(['{:02x}'.format((uuid.getnode() >> ele) & 0xff) 
+                    for ele in range(0, 48, 8)][::-1])
     return mac
-
+    
 # Physical Layer
 class PhysicalLayer:
     def send(self, data):
